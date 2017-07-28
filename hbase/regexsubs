@@ -1,0 +1,26 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    regexsubs search_regex [result_count_limit] [info_column] [table_name]'
+    echo 'default:  regexsubs search_regex 100 name tagger:tags'
+    echo 'example:  regexsubs ".+Middleword.+"'
+    echo 'example:  regexsubs ".+Lastword$"'
+	echo 'example:  regexsubs "^Firstword.+"'
+	echo 'example:  regexsubs "FirstwordInNickname." 100 manual_nick_names'
+	echo 'example:  regexsubs "Microso." 100 manual_nick_names'
+ 	echo '(See: http://docs.oracle.com/javase/6/docs/api/java/util/regex/Pattern.html)'
+    exit 0
+fi
+
+imports="import org.apache.hadoop.hbase.filter.SingleColumnValueFilter; import org.apache.hadoop.hbase.filter.CompareFilter; import org.apache.hadoop.hbase.filter.RegexStringComparator;  "
+
+cmd="scan '${4:-tagger:tags}', {LIMIT => ${2:-100}, FILTER => SingleColumnValueFilter.new(Bytes.toBytes('info'), Bytes.toBytes('${3:-name}'), CompareFilter::CompareOp.valueOf('EQUAL'), RegexStringComparator.new('$1')), COLUMNS => ['info:${3:-name}'] }"
+
+
+
+#RegexStringComparator.new('$1'))
+
+echo
+echo $cmd
+echo
+
+torun=$imports" "$cmd
+echo $torun | hbase shell 

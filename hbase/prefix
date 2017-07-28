@@ -1,0 +1,12 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    prefix search_string [result_count_limit] [table_name]'
+    echo 'default:  prefix search_string 100 tagger:tags'
+    exit 0
+fi
+
+imports="import org.apache.hadoop.hbase.filter.SingleColumnValueFilter; import org.apache.hadoop.hbase.filter.CompareFilter; import org.apache.hadoop.hbase.filter.RegexStringComparator; "
+
+cmd="scan '${3:-tagger:tags}', {FILTER => \"PrefixFilter('$1')\", LIMIT => ${2:-100}}"
+
+torun=$imports" "$cmd
+echo $torun | hbase shell 

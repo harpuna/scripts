@@ -1,0 +1,21 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    subs search_string [result_count_limit] [info_column] [table_name]'
+    echo 'default:  subs search_string 100 name tagger:tags'
+    echo 'example:  subs microsoft 100 manual_nick_names'
+    exit 0
+fi
+
+imports="import org.apache.hadoop.hbase.filter.SingleColumnValueFilter; import org.apache.hadoop.hbase.filter.CompareFilter; import org.apache.hadoop.hbase.filter.RegexStringComparator; import org.apache.hadoop.hbase.filter.SubstringComparator; "
+
+cmd="scan '${4:-tagger:tags}', {LIMIT => ${2:-100}, FILTER => SingleColumnValueFilter.new(Bytes.toBytes('info'), Bytes.toBytes('${3:-name}'), CompareFilter::CompareOp.valueOf('EQUAL'), SubstringComparator.new('$1')), COLUMNS => ['info:${3:-name}'] }"
+
+
+
+#RegexStringComparator.new('$1'))
+
+echo
+echo $cmd
+echo
+
+torun=$imports" "$cmd
+echo $torun | hbase shell 

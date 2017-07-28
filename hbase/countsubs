@@ -1,0 +1,25 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    subs search_string [result_count_limit] [info_column]'
+    echo 'default:  subs search_string 100 name'
+    exit 0
+fi
+
+imports="import org.apache.hadoop.hbase.filter.SingleColumnValueFilter; import org.apache.hadoop.hbase.filter.CompareFilter; import org.apache.hadoop.hbase.filter.RegexStringComparator; import org.apache.hadoop.hbase.filter.SubstringComparator; "
+
+cmd="scan 'tagger:tags', {LIMIT => ${2:-100}, FILTER => SingleColumnValueFilter.new(Bytes.toBytes('info'), Bytes.toBytes('${3:-name}'), CompareFilter::CompareOp.valueOf('EQUAL'), SubstringComparator.new('$1')), COLUMNS => ['info:${3:-name}'] }"
+
+#RegexStringComparator.new('$1'))
+
+echo
+echo $cmd
+echo
+
+torun=$imports" "$cmd
+
+start_time=`date +%s`
+echo $torun | hbase shell | grep "info:${3:-name}" | wc -l
+end_time=`date +%s`
+echo "Record count on line above"
+echo Execution time `expr $end_time - $start_time` s.
+echo
+
