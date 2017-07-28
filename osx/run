@@ -1,0 +1,24 @@
+#!/bin/bash
+file_name=$(basename $1)
+log_file_name=~/temp/run_$file_name.txt
+echo 
+start_dt=$(date)
+echo '________RUN [ '$1' ]' 
+echo '________STARTED AT [ '$start_dt' ]' 
+echo
+start_millis=$(date +%s)
+#source $1
+/bin/bash $1 &> $log_file_name
+echo
+end_dt=$(date)
+total_millis="$(($(date +%s)-start_millis))"
+echo '________FINISHED AT [ '$end_dt' ]'
+echo '________TOTAL MS: '$total_millis
+#echo '________OUTPUT WRITTEN TO '$log_file_name
+#echo '________TAIL'
+echo
+echo '...'
+tail -n 30 $log_file_name
+echo
+echo '________CODE '$?
+

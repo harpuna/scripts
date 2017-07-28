@@ -1,0 +1,6 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    hdput full_local_path full_remote_path'
+    exit 0
+fi
+hdfs dfs -rm $2
+hdfs dfs -put $1 $2

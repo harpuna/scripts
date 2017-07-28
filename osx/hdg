@@ -1,0 +1,7 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    hdg filename [local_path] [non_qc_base_path]'
+    echo 'default:  hdg filename . tagger/tagger_qc/tagged_data'
+    exit 0
+fi
+rm ${2:-.}/$1
+hdfs dfs -get ${3:-tagger/tagger_qc/tagged_data}/$1 ${2:-.}/$1

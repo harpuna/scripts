@@ -1,0 +1,1 @@
+hdfs dfs -ls tagger/tagger_qc/tagged_data

@@ -1,0 +1,6 @@
+if [[ $# -eq 0 ]] ; then
+    echo 'usage:    hdget full_remote_path full_local_path'
+    exit 0
+fi
+rm $2
+hdfs dfs -get $1 $2
