@@ -1,0 +1,60 @@
+function jg() {
+    grep --color=always -R -r -I -i -n --exclude-dir=log --exclude-dir=logs --exclude-dir=.idea --exclude-dir=.git --exclude-dir=exclude --exclude-dir=node_modules --include=*$2* $3 "$1" . | more -R -S
+}
+function jf() {
+    find . -iname "*$1*" 2>/dev/null
+}
+function parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+PROMPT_COMMAND='PS1="\n\[\033[0;33m\][\t]\[\033[32m\]\$(parse_git_branch)\[\033[00m\]  \[\033[0;97m\]\w\n\[\033[0m\]🌀  "'
+PROMPT_COMMAND="tab_title ; $PROMPT_COMMAND"
+
+# export PS1="\u@\h\w $ "
+
+function tab_title {
+  echo -n -e "\033]0;${PWD##*/}\007"
+}
+
+alias e='sublime'
+
+alias p="pwd"
+alias dl='cd ~/Downloads'
+alias l='ls -latrGH'
+alias ll='ls -latrhG'
+alias lll='ls -ld $(find .)'
+alias h='history 200'
+alias hg='history | grep -i'
+alias pss='ps -ef | grep -i'
+alias cds="cd ~/src"
+alias cda="cd ~/api"
+
+alias g='git'
+alias gs='git status'
+alias gd='git diff --ignore-space-at-eol'
+alias edit='open -e'
+alias grep='grep --color=always -n'
+alias gddev='git diff develop --ignore-space-at-eol'
+alias gdno='git diff --name-only --ignore-space-at-eol'
+alias gddevno='git diff develop --name-only --ignore-space-at-eol'
+alias gco='git checkout'
+alias gb='git branch'
+alias grh='git reset HEAD'
+alias jgrep='grep --color=always -r -I -i -n'
+alias jjgrep='grep --color=always -r -i -n'
+alias mvnci='mvn -U clean install -Dcheckstyle.skip -Dmaven.test.skip=true'
+
+export PATH=$PATH:/Users/jesseharris/bin:.
+export PATH=$PATH:/usr/local/sbin:/usr/local/bin
+
+#export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_151.jdk/Contents/Home
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
+
+export GIT_EDITOR='vi'
+export EDITOR='sublime'
+
+export M2_HOME=~/bin/apache-maven-3.5.0
+export M2=$M2_HOME/bin
+export PATH=$PATH:$M2_HOME/bin
+
